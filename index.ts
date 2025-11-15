@@ -11,12 +11,17 @@ app.get("/api/documents", (_, res) => {
 
 app.get("/api/documents/:id", (req, res) => {
   const doc = documentStore.getDocument(req.params.id);
+
+  if (!doc) {
+    return res.status(404).json({ error: "Document not found"});
+  }
+
   res.json(doc);
 });
 
 app.post("/api/documents", (_, res) => {
   const doc = documentStore.createDocument();
-  res.json(doc);
+  res.status(201).json(doc);
 });
 
 app.listen(port, () => {
