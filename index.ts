@@ -1,29 +1,15 @@
 import express from 'express';
-import {documentStore} from './store/DocumentsStore.ts';
+import cors from 'cors';
+import {setupRoutes} from './routes/index.ts';
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.get("/api/documents", (_, res) => {
-  const docs = documentStore.getAllDocuments();
-  res.json(docs);
-});
+app.use(cors());
+app.use(express.json());
 
-app.get("/api/documents/:id", (req, res) => {
-  const doc = documentStore.getDocument(req.params.id);
+setupRoutes(app);
 
-  if (!doc) {
-    return res.status(404).json({ error: "Document not found"});
-  }
-
-  res.json(doc);
-});
-
-app.post("/api/documents", (_, res) => {
-  const doc = documentStore.createDocument();
-  res.status(201).json(doc);
-});
-
-app.listen(port, () => {
-  console.log(`Example app listen on port ${port}!`);
+app.listen(PORT, () => {
+  console.log(`Listen on port ${PORT}!`);
 });
